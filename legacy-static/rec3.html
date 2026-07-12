@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificate — Ashley Rodriguez — E Perkins Law</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#12202C;
+  --ink-soft:#4B5560;
+  --paper:#EDEEE9;
+  --paper-raised:#F7F7F4;
+  --seal:#A9702B;
+  --seal-dark:#8A5A22;
+  --verified:#2F6F4F;
+  --verified-soft:#DCE9E1;
+  --line:#C9CCC3;
+  --line-strong:#9BA097;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html{
+  scroll-behavior:smooth;
+  overflow-x:hidden;
+}
+
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  width:100%;
+  position:relative;
+}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.display{font-family:'Fraunces',serif;}
+
+a{color:inherit;text-decoration:none;}
+
+.wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 32px;
+}
+
+/* ---------- NAV ---------- */
+
+nav{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(237,238,233,0.88);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+
+nav .wrap{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding-top:20px;
+  padding-bottom:20px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:19px;
+  letter-spacing:-0.01em;
+}
+
+.brand-mark{
+  width:28px;height:28px;
+  border-radius:50%;
+  border:1.5px solid var(--seal);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--seal);
+  font-size:13px;
+  font-family:'JetBrains Mono',monospace;
+  flex-shrink:0;
+}
+
+nav .nav-links{
+  display:flex;
+  gap:36px;
+  font-size:14px;
+  color:var(--ink-soft);
+  align-items:center;
+}
+
+nav .nav-links a{
+  text-decoration:none;
+  transition:color .15s ease;
+}
+nav .nav-links a:hover{color:var(--ink);}
+
+/* Dropdown */
+.dropdown{
+  position:relative;
+}
+
+.dropdown-toggle{
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:0;
+  border-radius:3px;
+  transition:background .15s ease;
+}
+
+.dropdown-toggle:hover{
+  background:rgba(169,112,43,0.1);
+}
+
+.dropdown-toggle::after{
+  content:'▾';
+  font-size:10px;
+}
+
+.dropdown-menu{
+  position:absolute;
+  top:100%;
+  left:0;
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:3px;
+  box-shadow:0 8px 20px rgba(18,32,44,0.15);
+  min-width:200px;
+  margin-top:8px;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(-8px);
+  transition:all .2s ease;
+}
+
+.dropdown:hover .dropdown-menu{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+
+.dropdown-menu a{
+  display:block;
+  padding:12px 16px;
+  font-size:14px;
+  color:var(--ink-soft);
+  border-bottom:1px solid var(--line);
+  transition:all .15s ease;
+}
+
+.dropdown-menu a:last-child{border-bottom:none;}
+
+.dropdown-menu a:hover{
+  background:rgba(169,112,43,0.1);
+  color:var(--ink);
+  padding-left:20px;
+}
+
+.dropdown-menu a.active{
+  background:var(--verified-soft);
+  color:var(--verified);
+  font-weight:500;
+}
+
+.nav-cta{
+  font-size:14px;
+  font-weight:500;
+  padding:9px 18px;
+  border:1px solid var(--ink);
+  border-radius:3px;
+  text-decoration:none;
+  transition:background .15s ease, color .15s ease;
+  white-space:nowrap;
+}
+.nav-cta:hover{background:var(--ink);color:var(--paper);}
+
+/* Hamburger Menu */
+.hamburger{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+  padding:8px;
+  background:none;
+  border:none;
+}
+
+.hamburger span{
+  width:24px;
+  height:2px;
+  background:var(--ink);
+  transition:all .3s ease;
+  border-radius:2px;
+}
+
+.hamburger.active span:nth-child(1){
+  transform:rotate(45deg) translate(7px, 7px);
+}
+
+.hamburger.active span:nth-child(2){
+  opacity:0;
+}
+
+.hamburger.active span:nth-child(3){
+  transform:rotate(-45deg) translate(7px, -7px);
+}
+
+/* ---------- CERTIFICATE HEADER ---------- */
+
+.cert-header{
+  padding:60px 0 40px;
+  border-bottom:1px solid var(--line);
+}
+
+.cert-header-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:32px;
+  gap:32px;
+}
+
+.cert-header h1{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:38px;
+  line-height:1.1;
+  letter-spacing:-0.02em;
+  margin-bottom:12px;
+}
+
+.cert-header .eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--seal-dark);
+  margin-bottom:12px;
+}
+
+.cert-id{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--ink-soft);
+  word-break:break-all;
+}
+
+.status-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:var(--verified-soft);
+  color:var(--verified);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11.5px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  padding:8px 14px;
+  border-radius:20px;
+  font-weight:600;
+  white-space:nowrap;
+}
+.status-pill svg{width:14px;height:14px;}
+
+.cert-meta{
+  display:flex;
+  gap:48px;
+  flex-wrap:wrap;
+}
+
+.cert-meta-item{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.cert-meta-item label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+}
+
+.cert-meta-item div{
+  font-size:15px;
+  font-weight:500;
+  color:var(--ink);
+}
+
+/* ---------- TABS ---------- */
+
+.tabs-container{
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:61px;
+  background:var(--paper);
+  z-index:40;
+}
+
+.tabs{
+  display:flex;
+  gap:0;
+}
+
+.tab{
+  padding:18px 28px;
+  font-size:14px;
+  font-weight:500;
+  color:var(--ink-soft);
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:all .2s ease;
+  background:transparent;
+  border:none;
+  font-family:'Inter',sans-serif;
+}
+
+.tab:hover{
+  color:var(--ink);
+  background:rgba(169,112,43,0.05);
+}
+
+.tab.active{
+  color:var(--seal-dark);
+  border-bottom-color:var(--seal);
+}
+
+/* ---------- TAB CONTENT ---------- */
+
+.tab-content{
+  display:none;
+  padding:48px 0 80px;
+}
+
+.tab-content.active{
+  display:block;
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:32px 48px;
+  max-width:800px;
+}
+
+.info-field label{
+  display:block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:8px;
+}
+
+.info-field div{
+  font-size:16px;
+  font-weight:500;
+  color:var(--ink);
+  word-break:break-all;
+}
+
+.info-field.wide{
+  grid-column:1 / -1;
+}
+
+.video-container{
+  max-width:900px;
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:20px;
+  margin-bottom:32px;
+  width:100%;
+}
+
+.video-wrapper{
+  width:100%;
+  border-radius:4px;
+  background:var(--paper-raised);
+  overflow:hidden;
+}
+
+.video-wrapper video{
+  width:100%;
+  height:auto;
+  display:block;
+  background:var(--paper-raised);
+}
+
+.video-meta{
+  margin-top:20px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+  display:flex;
+  gap:32px;
+  flex-wrap:wrap;
+  font-size:13px;
+}
+
+.video-meta-item{
+  display:flex;
+  gap:8px;
+}
+
+.video-meta-item label{
+  color:var(--ink-soft);
+}
+
+.video-meta-item span{
+  font-family:'JetBrains Mono',monospace;
+  color:var(--ink);
+  font-weight:500;
+}
+
+.history-timeline{
+  max-width:700px;
+}
+
+.history-item{
+  display:flex;
+  gap:24px;
+  padding:24px 0;
+  border-bottom:1px solid var(--line);
+}
+
+.history-item:last-child{border-bottom:none;}
+
+.history-time{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--ink-soft);
+  min-width:160px;
+}
+
+.history-content h3{
+  font-size:16px;
+  font-weight:600;
+  margin-bottom:6px;
+}
+
+.history-content p{
+  font-size:14px;
+  color:var(--ink-soft);
+  line-height:1.6;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+/* Desktop - ensure proper alignment */
+@media (min-width:769px){
+  nav .wrap{
+    display:flex;
+    align-items:center;
+    gap:32px;
+  }
+
+  .brand{
+    position:static;
+    transform:none;
+  }
+
+  nav .nav-links{
+    display:flex;
+    margin-left:auto;
+  }
+}
+
+@media (max-width:768px){
+  .hamburger{display:flex;order:-1;}
+
+  nav .wrap{
+    position:relative;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  .brand{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+  }
+
+  .nav-cta{
+    margin-left:auto;
+  }
+
+  nav .nav-links{
+    position:absolute;
+    top:100%;
+    left:0;
+    right:0;
+    background:var(--paper-raised);
+    border-top:1px solid var(--line);
+    flex-direction:column;
+    gap:0;
+    padding:8px 0;
+    box-shadow:0 8px 20px rgba(18,32,44,0.1);
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transition:all .3s ease;
+  }
+
+  nav .nav-links.active{
+    max-height:400px;
+    opacity:1;
+    padding:12px 0;
+  }
+
+  nav .nav-links a,
+  nav .nav-links .dropdown{
+    padding:12px 24px;
+    border-bottom:1px solid var(--line);
+  }
+
+  nav .nav-links a:last-child,
+  nav .nav-links .dropdown:last-child{
+    border-bottom:none;
+  }
+
+  .dropdown-toggle{
+    padding:0;
+    justify-content:space-between;
+    width:100%;
+  }
+
+  .dropdown-menu{
+    position:static;
+    opacity:1;
+    visibility:visible;
+    transform:none;
+    margin-top:12px;
+    box-shadow:none;
+    border:none;
+    border-top:1px solid var(--line);
+    background:transparent;
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .3s ease;
+  }
+
+  .dropdown.mobile-open .dropdown-menu{
+    max-height:300px;
+  }
+
+  .dropdown-menu a{
+    padding-left:12px;
+  }
+
+  .cert-header-top{
+    flex-direction:column;
+    gap:20px;
+  }
+
+  .cert-meta{gap:28px;}
+
+  .info-grid{
+    grid-template-columns:1fr;
+    gap:24px;
+  }
+
+  .tabs{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .tab{
+    padding:16px 20px;
+    font-size:13px;
+    white-space:nowrap;
+  }
+
+  .history-item{
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .history-time{min-width:auto;}
+}
+
+@media (max-width:640px){
+  .wrap{padding:0 20px;}
+
+  .cert-header{padding:40px 0 30px;}
+
+  .cert-header h1{font-size:28px;}
+
+  .cert-id{font-size:11px;}
+
+  .tab-content{padding:32px 0 60px;}
+
+  .video-container{
+    padding:16px;
+    width:100%;
+    max-width:100%;
+  }
+
+  .video-meta{gap:20px;font-size:12px;}
+}
+
+@media (max-width:480px){
+  .wrap{padding:0 16px;}
+
+  .brand{font-size:15px;}
+  .brand-mark{width:24px;height:24px;font-size:12px;}
+
+  .cert-header{padding:40px 0 30px;}
+  .cert-header h1{font-size:24px;}
+  .cert-id{font-size:10px;}
+
+  .cert-meta{
+    flex-direction:column;
+    gap:16px;
+  }
+
+  .cert-meta-item label{font-size:9px;}
+  .cert-meta-item div{font-size:13px;}
+
+  .status-pill{font-size:10px;padding:6px 11px;}
+  .status-pill svg{width:12px;height:12px;}
+
+  .tab{padding:14px 16px;font-size:12px;white-space:nowrap;}
+
+  .tab-content{padding:28px 0 50px;}
+
+  h2{font-size:20px !important;margin-top:36px !important;padding-bottom:14px !important;}
+
+  .info-field label{font-size:10px;}
+  .info-field div{font-size:14px;}
+
+  .info-grid{gap:20px;}
+
+  button[onclick="switchTab('replay')"]{
+    width:100%;
+    padding:12px 18px;
+    font-size:13px;
+  }
+
+  .video-container{
+    padding:14px;
+    margin-bottom:24px;
+    width:100%;
+    max-width:100%;
+  }
+
+  .video-meta{gap:16px;font-size:11px;}
+  .video-meta-item{font-size:11px;}
+
+  .history-item{padding:18px 0;}
+  .history-time{font-size:11px;}
+  .history-content h3{font-size:15px;}
+  .history-content p{font-size:13px;}
+
+  .tab-content p{font-size:13px !important;line-height:1.6 !important;}
+}
+
+@media (max-width:375px){
+  .cert-header h1{font-size:22px;}
+  .cert-id{font-size:9px;}
+  .status-pill{font-size:9px;padding:5px 9px;}
+  .tab{padding:12px 14px;font-size:11px;}
+  h2{font-size:18px !important;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="index_EPerkinsLaw_v2.html" class="brand">
+      <span class="brand-mark">✓</span>
+      E Perkins Law
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="index_EPerkinsLaw_v2.html#what">What it does</a>
+      <a href="index_EPerkinsLaw_v2.html#how">How it works</a>
+      <div class="dropdown" id="mobileDropdown">
+        <div class="dropdown-toggle" id="dropdownToggle">Recordings</div>
+        <div class="dropdown-menu">
+          <a href="rec1.html">Recording #1 — Shridhar Ratnam</a>
+          <a href="rec2.html">Recording #2 — Gary Polsley</a>
+          <a href="rec3.html" class="active">Recording #3 — Ashley Rodriguez</a>
+        </div>
+      </div>
+    </div>
+    <a href="index_EPerkinsLaw_v2.html#contact" class="nav-cta">Get in touch</a>
+  </div>
+</nav>
+
+<header class="cert-header">
+  <div class="wrap">
+    <div class="cert-header-top">
+      <div>
+        <div class="eyebrow">Certificate of Recorded Consent</div>
+        <h1>Ashley Rodriguez</h1>
+        <div class="cert-id">Certificate ID: 17c9e2d5-6a3b-4127-8e9f-0ab3d65f7c98</div>
+      </div>
+      <div>
+        <span class="status-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Verified
+        </span>
+      </div>
+    </div>
+    <div class="cert-meta">
+      <div class="cert-meta-item">
+        <label>Signed</label>
+        <div>Jun 23, 2026 · 04:11 UTC</div>
+      </div>
+      <div class="cert-meta-item">
+        <label>Age</label>
+        <div id="certAge">Calculating...</div>
+      </div>
+      <div class="cert-meta-item">
+        <label>Duration</label>
+        <div>0:50</div>
+      </div>
+      <div class="cert-meta-item">
+        <label>IP Address</label>
+        <div>68.239.224.180</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="tabs-container">
+  <div class="wrap">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('certificate')">Certificate</button>
+      <button class="tab" onclick="switchTab('replay')">Session Replay</button>
+      <button class="tab" onclick="switchTab('history')">History</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="certificate" class="tab-content active">
+    <p style="font-size:15px; color:var(--ink-soft); line-height:1.6; margin:0 0 32px; max-width:820px;">This certificate was issued by E Perkins Law, the independent Internet lead certification authority. It certifies the following information about this lead:</p>
+
+    <h2 style="font-family:'Fraunces',serif; font-size:24px; font-weight:600; color:var(--ink); margin:0 0 24px; padding-bottom:18px; border-bottom:1px solid var(--line);">Session Information</h2>
+
+    <div class="info-grid">
+      <div class="info-field">
+        <label>Date of Visit</label>
+        <div>June 23, 2026</div>
+      </div>
+      <div class="info-field">
+        <label>Time of Visit</label>
+        <div>04:11:54 UTC</div>
+      </div>
+      <div class="info-field">
+        <label>Time on Page</label>
+        <div>0:50</div>
+      </div>
+      <div class="info-field">
+        <label>Remote IP Address</label>
+        <div>68.239.224.180</div>
+      </div>
+      <div class="info-field">
+        <label>Consent Version</label>
+        <div>v2026-07a</div>
+      </div>
+      <div class="info-field">
+        <label>Certificate Number</label>
+        <div style="word-break:break-all;font-family:'JetBrains Mono',monospace;font-size:12px;">17c9e2d5-6a3b-4127-8e9f-0ab3d65f7c98</div>
+      </div>
+    </div>
+
+    <h2 style="font-family:'Fraunces',serif; font-size:24px; font-weight:600; color:var(--ink); margin:48px 0 24px; padding-bottom:18px; border-bottom:1px solid var(--line);">Lead Information</h2>
+
+    <div class="info-grid">
+      <div class="info-field">
+        <label>First Name</label>
+        <div>Ashley</div>
+      </div>
+      <div class="info-field">
+        <label>Last Name</label>
+        <div>Rodriguez</div>
+      </div>
+      <div class="info-field">
+        <label>Email</label>
+        <div>ashley@buddingrosesphotography.com</div>
+      </div>
+      <div class="info-field">
+        <label>Phone</label>
+        <div>9082977199</div>
+      </div>
+      <div class="info-field wide">
+        <label>Tax Debt Amount</label>
+        <div>Not sure</div>
+      </div>
+    </div>
+
+    <h2 style="font-family:'Fraunces',serif; font-size:24px; font-weight:600; color:var(--ink); margin:48px 0 24px; padding-bottom:18px; border-bottom:1px solid var(--line);">What did they see?</h2>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:32px; flex-wrap:wrap;">
+      <p style="font-size:14px; color:var(--ink-soft); line-height:1.7; margin:0; max-width:640px;">E Perkins Law records both the web page content viewed by the visitor and the user actions performed on the page. These recorded events are then replayed, providing a session playback that showcases the user's interaction with the page.</p>
+      <button onclick="switchTab('replay')" style="background:var(--verified); color:var(--paper); border:none; border-radius:4px; padding:13px 22px; font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap; font-family:'Inter',sans-serif; transition:background .15s ease;" onmouseover="this.style.background='#26614A'" onmouseout="this.style.background='#2F6F4F'">View Session Replay</button>
+    </div>
+  </div>
+
+  <div id="replay" class="tab-content">
+    <div class="video-container">
+      <div class="video-wrapper">
+        <video controls playsinline webkit-playsinline preload="metadata" src="videos/rec3.mp4"></video>
+      </div>
+      <div class="video-meta">
+        <div class="video-meta-item">
+          <label>Duration:</label>
+          <span>0:50</span>
+        </div>
+        <div class="video-meta-item">
+          <label>Recorded:</label>
+          <span>Jun 23, 2026 04:11 UTC</span>
+        </div>
+        <div class="video-meta-item">
+          <label>Format:</label>
+          <span>Screen recording</span>
+        </div>
+      </div>
+    </div>
+    <p style="color:var(--ink-soft);font-size:14px;line-height:1.6;">This session replay shows the exact consent flow as experienced by the user. The recording is tamper-evident and locked at the time of capture.</p>
+  </div>
+
+  <div id="history" class="tab-content">
+    <div class="history-timeline">
+      <div class="history-item">
+        <div class="history-time">Jun 23, 2026<br>04:11:54 UTC</div>
+        <div class="history-content">
+          <h3>Certificate Created</h3>
+          <p>Certificate automatically generated and locked. Verification hash computed and stored immutably.</p>
+        </div>
+      </div>
+      <div class="history-item">
+        <div class="history-time">Jun 23, 2026<br>04:11:54 UTC</div>
+        <div class="history-content">
+          <h3>Consent Recorded</h3>
+          <p>User consent captured via form submission. IP address logged, session replay initiated.</p>
+        </div>
+      </div>
+      <div class="history-item">
+        <div class="history-time">Jun 23, 2026<br>04:11:04 UTC</div>
+        <div class="history-content">
+          <h3>Session Initiated</h3>
+          <p>User accessed consent form. Consent language version v2026-07a displayed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(tabName) {
+  // Hide all tabs
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+
+  // Show selected tab
+  document.getElementById(tabName).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Calculate certificate age
+function calculateAge() {
+  const signedDate = new Date('2026-06-23T04:11:54.391Z');
+  const now = new Date();
+  const diff = now - signedDate;
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+  document.getElementById('certAge').textContent =
+    `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+}
+
+// Update age every second
+calculateAge();
+setInterval(calculateAge, 1000);
+
+// Mobile menu toggle
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+const dropdownToggle = document.getElementById('dropdownToggle');
+const mobileDropdown = document.getElementById('mobileDropdown');
+
+hamburger.addEventListener('click', function() {
+  this.classList.toggle('active');
+  navLinks.classList.toggle('active');
+});
+
+// Mobile dropdown toggle
+dropdownToggle.addEventListener('click', function(e) {
+  if (window.innerWidth <= 768) {
+    e.stopPropagation();
+    mobileDropdown.classList.toggle('mobile-open');
+  }
+});
+
+// Close menu when clicking outside
+document.addEventListener('click', function(e) {
+  if (window.innerWidth <= 768) {
+    if (!e.target.closest('nav')) {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('active');
+      mobileDropdown.classList.remove('mobile-open');
+    }
+  }
+});
+</script>
+
+</body>
+</html>
