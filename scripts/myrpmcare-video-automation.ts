@@ -16,7 +16,6 @@
 import 'dotenv/config';
 import { createCertificateSafe } from '../lib/certificate-client';
 import { logCertificateResult } from '../lib/certificate-logging';
-import { getCurrentISODateTime } from '../lib/certificate-client';
 
 // ========================================================================
 // CONFIGURATION

@@ -34,3 +34,47 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+
+# Flask
+instance/
+.webassets-cache
+
+# Runtime files
+.backend-pids
+.frontend-pids
+.local-pids
+.eperkins-backend-pid
+*.pid
+
+# Logs
+logs/
+*.log
+
+# Videos (generated content)
+*/videos/
+*/uploads/
+
+# Playwright
+*/.playwright/
+playwright-report/
+test-results/
+
+# Environment files
+.env
+!.env.example
+
+# Certificate log
+certificate_log.txt

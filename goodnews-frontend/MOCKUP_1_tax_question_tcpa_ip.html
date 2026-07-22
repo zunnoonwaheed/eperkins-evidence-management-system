@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOCKUP — Q4 Tax Question / TCPA Consent Box with IP Capture</title>
+<style>
+  :root{--ink:#10231c;--green:#0e4d3c;--green-dark:#093528;--paper:#f7f5ef;--card:#fff;
+        --gold:#b98a2f;--gold-soft:#f3e8cf;--line:#d9d4c7;--muted:#5c6a63;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.55;padding:40px 20px;}
+  .devnote{max-width:640px;margin:0 auto 18px;background:#10231c;color:#cfe4da;font-size:12.5px;
+           padding:12px 16px;border-radius:8px;font-family:Courier,monospace;}
+  .devnote b{color:#e8c976;}
+  .qcard{max-width:640px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+         border-radius:10px;padding:34px 30px;box-shadow:0 2px 10px rgba(16,35,28,.05);}
+  .qnum{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:10px;}
+  .qtext{font-family:Georgia,serif;font-size:23px;line-height:1.25;margin-bottom:22px;}
+  .opts{display:grid;gap:10px;}
+  .opt{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:8px;
+       padding:15px 16px;background:#fff;font-size:15.5px;}
+  .opt.selected{border-color:var(--green);background:#f0f6f3;font-weight:600;}
+  .dot{width:18px;height:18px;border:2px solid var(--line);border-radius:50%;flex:none;
+       display:flex;align-items:center;justify-content:center;}
+  .opt.selected .dot{border-color:var(--green);}
+  .opt.selected .dot::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--green);}
+  .tcpa{margin-top:22px;border:2px solid var(--gold);border-radius:10px;background:#fffdf6;overflow:hidden;}
+  .tcpa-head{background:var(--gold-soft);padding:12px 18px;font-size:12px;font-weight:700;
+             letter-spacing:.12em;text-transform:uppercase;color:#7a5a17;}
+  .tcpa-body{padding:18px;}
+  .tcpa-check{display:flex;gap:12px;align-items:flex-start;}
+  .tcpa-check input{width:22px;height:22px;flex:none;margin-top:2px;accent-color:var(--green);}
+  .tcpa-text{font-size:12.5px;line-height:1.6;color:#3c463f;}
+  .tcpa-text strong{color:var(--ink);}
+  .tcpa-meta{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:11px;
+             color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+  .ipchip{font-family:Courier,monospace;background:#e7f2ec;color:#0e4d3c;padding:1px 7px;
+          border-radius:4px;font-weight:700;font-size:11.5px;}
+  .nav-row{display:flex;justify-content:space-between;margin-top:26px;}
+  .btn{border:none;font-size:15px;font-weight:600;padding:12px 30px;border-radius:6px;}
+  .btn-next{background:var(--green);color:#fff;box-shadow:0 2px 0 var(--green-dark);}
+  .btn-back{background:transparent;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<div class="devnote">
+DEV MOCKUP 1 of 2 — Q4 tax question, consent state = CHECKED.<br>
+IP populated via <b>window.setClientIP('173.54.201.88')</b> or server template
+<b>{{CLIENT_IP}}</b> on hidden input <b>#ip_address</b>.<br>
+IP appears in consent meta row (below) AND rides in payload as <b>ip_address</b> +
+<b>tcpa_consent_ip</b>. Sample values shown are placeholders.
+</div>
+
+<div class="qcard">
+  <div class="qnum">Question 4 of 6</div>
+  <div class="qtext">Do you currently owe back taxes to the IRS or your state?</div>
+  <div class="opts">
+    <div class="opt selected"><span class="dot"></span>Yes &mdash; more than $10,000</div>
+    <div class="opt"><span class="dot"></span>Yes &mdash; less than $10,000</div>
+    <div class="opt"><span class="dot"></span>I'm not sure</div>
+    <div class="opt"><span class="dot"></span>No</div>
+  </div>
+
+  <div class="tcpa">
+    <div class="tcpa-head">&#9878;&#65039; Tax Relief Contact Authorization &mdash; Required to Match You With a Specialist</div>
+    <div class="tcpa-body">
+      <label class="tcpa-check">
+        <input type="checkbox" checked>
+        <span class="tcpa-text">
+          By checking this box, I provide my <strong>express written consent</strong> to be contacted by
+          <strong>Zangara Enterprises, LLC</strong> and/or <strong>Cacophinney, LLC</strong> regarding tax
+          relief and tax resolution options at the telephone number I provide in this survey, including if it
+          is a wireless number. I agree that I may be contacted by live agents, <strong>automatic telephone
+          dialing systems, artificial or prerecorded voice messages, and SMS/text messages</strong>, and by
+          email, even if my number appears on any federal, state, or company Do-Not-Call registry.
+          I understand that <strong>my consent is not a condition of purchasing any goods or services</strong>
+          and that I may instead call <strong>(800) 000-0000</strong> to proceed without consenting.
+          Message and data rates may apply; message frequency varies. I may revoke this consent at any time
+          by replying <strong>STOP</strong> to any text message or by emailing
+          <strong>optout@savingscheckamerica.com</strong>. I agree that checking this box and submitting this
+          survey constitutes my <strong>electronic signature</strong> under the E-SIGN Act, and I agree to the
+          Terms of Use and Privacy Policy.
+        </span>
+      </label>
+      <div class="tcpa-meta">
+        <span>Consent version: <strong>v2026-07a</strong></span>
+        <span>IP address: <span class="ipchip">173.54.201.88</span></span>
+        <span>Signed: 2026-07-03T14:22:09.481Z (UTC)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-back">&larr; Back</button>
+    <button class="btn btn-next">Next &rarr;</button>
+  </div>
+</div>
+
+</body>
+</html>

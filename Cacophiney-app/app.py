@@ -1,25 +1,20 @@
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory, flash
+from flask import Flask, render_template, request, redirect, send_from_directory, flash, jsonify
 from flask_cors import CORS
 from pathlib import Path
 import pandas as pd
 import os
-from datetime import datetime, timezone
-from dotenv import load_dotenv
 
-from automation import fill_form_and_record
+from automation import fill_form_and_record, normalize_tax_debt_value
 from gcs_util import upload_video_to_gcs, generate_signed_url
 from eperkins_certificate_client import create_eperkins_certificate, strip_signed_url_params
 from certificate_payload import build_certificate_payload, get_current_utc_iso
 
-# Load environment variables
-load_dotenv()
-
 
 app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_SECRET_KEY", "local-dev-secret-key")
+app.secret_key = "local-dev-secret-key"
 
-# Enable CORS so Next.js app (localhost:3000) can access videos
-CORS(app, resources={r"/videos/*": {"origins": ["http://localhost:3000", "http://localhost:3001"]}})
+# Configure CORS for Next.js frontend
+CORS(app, origins=[os.getenv("FRONTEND_URL", "http://localhost:3002")])
 
 BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_FOLDER = BASE_DIR / "uploads"
@@ -39,13 +34,14 @@ def allowed_file(filename):
 
 def save_video_link(video_path, video_filename):
     """
-    Upload video to GCS and return the final video URL.
+    Upload video to GCS and return the final video URL with metadata.
 
     Returns:
         dict with structure:
         {
             "video_url": str,
-            "storage_path": str (optional, if GCS upload succeeded)
+            "storage_path": str (optional, if GCS upload succeeded),
+            "recording_id": str (generated from filename)
         }
     """
     # Default to local video URL (full URL required for certificate API)
@@ -55,12 +51,12 @@ def save_video_link(video_path, video_filename):
 
     result = {
         "video_url": local_video_url,
-        "storage_path": None
+        "storage_path": None,
+        "recording_id": video_filename.replace(".mp4", "").replace(".webm", "")
     }
 
     try:
         gs_path = upload_video_to_gcs(str(video_path), object_name=video_filename)
-
         if gs_path:
             result["storage_path"] = gs_path
 
@@ -71,19 +67,19 @@ def save_video_link(video_path, video_filename):
                     return result
             except Exception as signed_error:
                 print(f"[Error] Failed to generate signed URL: {signed_error}")
-
     except Exception as upload_error:
         print(f"[Error] Failed to upload video to GCS: {upload_error}")
 
     return result
 
 
-def create_certificate_for_lead(lead_data, recording_url, recording_storage_path=None):
+def create_certificate_for_lead(lead_data, recording_id, recording_url, recording_storage_path=None):
     """
     Create an Eperkins certificate for a processed lead.
 
     Args:
         lead_data: Dictionary or Series with lead form data
+        recording_id: Unique recording identifier
         recording_url: Final video URL
         recording_storage_path: Optional GCS storage path
 
@@ -111,7 +107,7 @@ def create_certificate_for_lead(lead_data, recording_url, recording_storage_path
 
         payload = build_certificate_payload(
             lead=lead_dict,
-            recording_id=None,  # Will be auto-generated
+            recording_id=recording_id,
             recording_url=recording_url,
             recording_storage_path=recording_storage_path,
             video_generated_at=video_generated_at
@@ -129,15 +125,6 @@ def create_certificate_for_lead(lead_data, recording_url, recording_storage_path
             cert_url = certificate_result.get('certificate_url')
             print(f"[Certificate] Success: {cert_uuid}")
             print(f"[Certificate] URL: {cert_url}")
-
-            # Log certificate creation for easy tracking
-            try:
-                log_file = BASE_DIR / "certificate_log.txt"
-                with open(log_file, 'a') as f:
-                    f.write(f"{datetime.now(timezone.utc).isoformat()} | {cert_uuid} | {cert_url}\n")
-            except Exception as log_error:
-                print(f"[Warning] Could not write to certificate log: {log_error}")
-
         else:
             print(f"[Certificate] Failed: {certificate_result.get('error')}")
             certificate_result["warning"] = "Video completed, but certificate creation failed."
@@ -164,11 +151,27 @@ def normalize_col_name(value):
     )
 
 
+def normalize_yes_no_default_yes(value):
+    value = str(value).strip()
+
+    if not value:
+        return "yes"
+
+    value_lower = value.lower()
+
+    if value_lower in {"yes", "y", "true", "1", "checked"}:
+        return "yes"
+
+    if value_lower in {"no", "n", "false", "0", "unchecked"}:
+        return "no"
+
+    return value
+
+
 def _normalize_dataframe(df):
     """
-    Normalizes uploaded CSV/XLSX files into the exact fields needed by the
-    current TeleMD eligibility form.
-    Supports clean headers and rough headers.
+    Normalizes uploaded CSV/XLSX files into the fields needed by the
+    Cacophinney callback form.
     """
 
     if df is None or df.empty:
@@ -205,45 +208,20 @@ def _normalize_dataframe(df):
             "email address",
             "e mail",
         ],
-        "State": [
-            "state",
-            "us state",
-            "state code",
-            "resident state",
-        ],
-        "Has Medicare": [
-            "has medicare",
-            "have medicare",
-            "medicare",
-            "medicare status",
-            "medicare part b",
-        ],
-        "Ongoing Conditions": [
-            "ongoing conditions",
-            "conditions",
-            "medical conditions",
-            "chronic conditions",
-            "health conditions",
-            "condition",
+        "Tax Debt Amount": [
+            "tax debt amount",
+            "tax debt",
+            "debt amount",
+            "amount owed",
+            "amount of tax debt",
+            "tax amount",
+            "irs debt",
         ],
         "Contact Consent": [
             "contact consent",
             "tcpa",
             "tcpa consent",
             "consent",
-        ],
-        "Privacy Terms": [
-            "privacy terms",
-            "privacy",
-            "terms",
-            "privacy and terms",
-            "privacy terms consent",
-        ],
-        "Tax Debt Consent": [
-            "tax debt consent",
-            "tax consent",
-            "tax debt",
-            "tax debt checkbox",
             "cacophinney consent",
             "partner consent",
         ],
@@ -263,6 +241,7 @@ def _normalize_dataframe(df):
             "consent date",
             "demo date",
             "timestamp date",
+            "signed date",
         ],
     }
 
@@ -274,13 +253,11 @@ def _normalize_dataframe(df):
     mapped = {}
 
     for target_field, aliases in field_aliases.items():
-        # Exact alias match first
         for source_col, normalized_col in normalized_source_cols.items():
             if normalized_col in aliases:
                 mapped[target_field] = source_col
                 break
 
-        # Partial alias match second
         if target_field not in mapped:
             for source_col, normalized_col in normalized_source_cols.items():
                 if any(alias in normalized_col for alias in aliases):
@@ -300,67 +277,12 @@ def _normalize_dataframe(df):
     for col in output.columns:
         output[col] = output[col].fillna("").astype(str)
 
-    # Normalize common dropdown values
-    output["State"] = output["State"].apply(lambda x: str(x).strip().upper())
-
-    output["Has Medicare"] = output["Has Medicare"].apply(normalize_medicare_value)
+    output["Tax Debt Amount"] = output["Tax Debt Amount"].apply(normalize_tax_debt_value)
     output["Contact Consent"] = output["Contact Consent"].apply(normalize_yes_no_default_yes)
-    output["Privacy Terms"] = output["Privacy Terms"].apply(normalize_yes_no_default_yes)
-    output["Tax Debt Consent"] = output["Tax Debt Consent"].apply(normalize_yes_no_default_yes)
     output["IP Address"] = output["IP Address"].astype(str).str.strip()
     output["Receipt Date"] = output["Receipt Date"].astype(str).str.strip()
 
     return output
-
-
-def normalize_medicare_value(value):
-    value = str(value).strip()
-
-    if not value:
-        return ""
-
-    value_lower = value.lower()
-
-    yes_values = {"yes", "y", "true", "1", "medicare", "has medicare"}
-    no_values = {"no", "n", "false", "0", "no medicare"}
-    unsure_values = {
-        "not sure",
-        "unsure",
-        "unknown",
-        "maybe",
-        "dont know",
-        "don't know",
-        "not_sure",
-    }
-
-    if value_lower in yes_values:
-        return "Yes"
-
-    if value_lower in no_values:
-        return "No"
-
-    if value_lower in unsure_values:
-        return "Not sure"
-
-    # Keep original if already formatted or custom
-    return value
-
-
-def normalize_yes_no_default_yes(value):
-    value = str(value).strip()
-
-    if not value:
-        return "yes"
-
-    value_lower = value.lower()
-
-    if value_lower in {"yes", "y", "true", "1", "checked"}:
-        return "yes"
-
-    if value_lower in {"no", "n", "false", "0", "unchecked"}:
-        return "no"
-
-    return value
 
 
 def _load_table(filepath, ext):
@@ -403,18 +325,13 @@ def _load_table(filepath, ext):
                 "Last Name",
                 "Mobile Phone",
                 "Email",
-                "State",
-                "Has Medicare",
-                "Ongoing Conditions",
+                "Tax Debt Amount",
                 "Contact Consent",
-                "Privacy Terms",
-                "Tax Debt Consent",
                 "IP Address",
                 "Receipt Date",
             ]
 
             df2.columns = fallback_columns[: len(df2.columns)]
-
             norm = _normalize_dataframe(df2)
 
         except Exception as error:
@@ -434,12 +351,8 @@ def home():
                 "Last Name": request.form.get("last_name", ""),
                 "Mobile Phone": request.form.get("mobile_phone", ""),
                 "Email": request.form.get("email", ""),
-                "State": request.form.get("state", ""),
-                "Has Medicare": request.form.get("has_medicare", ""),
-                "Ongoing Conditions": request.form.get("ongoing_conditions", ""),
-                "Contact Consent": "yes",
-                "Privacy Terms": "yes",
-                "Tax Debt Consent": request.form.get("tax_debt_consent", "yes"),
+                "Tax Debt Amount": request.form.get("tax_debt_amount", ""),
+                "Contact Consent": request.form.get("contact_consent", "yes"),
                 "IP Address": request.form.get("ip_address", ""),
                 "Receipt Date": request.form.get("receipt_date", ""),
             }
@@ -448,19 +361,17 @@ def home():
                 single_data["First Name"],
                 single_data["Last Name"],
                 single_data["Mobile Phone"],
-                single_data["State"],
-                single_data["Has Medicare"],
+                single_data["Email"],
+                single_data["Tax Debt Amount"],
+
             ]
 
             if not all(str(field).strip() for field in required_fields):
-                flash("First Name, Last Name, Mobile Phone, State, and Medicare status are required.")
+                flash("First Name, Last Name, Mobile Phone, and Tax Debt Amount are required.")
                 return redirect(request.url)
 
-            single_data["State"] = single_data["State"].strip().upper()
-            single_data["Has Medicare"] = normalize_medicare_value(single_data["Has Medicare"])
+            single_data["Tax Debt Amount"] = normalize_tax_debt_value(single_data["Tax Debt Amount"])
             single_data["Contact Consent"] = normalize_yes_no_default_yes(single_data["Contact Consent"])
-            single_data["Privacy Terms"] = normalize_yes_no_default_yes(single_data["Privacy Terms"])
-            single_data["Tax Debt Consent"] = normalize_yes_no_default_yes(single_data["Tax Debt Consent"])
             single_data["IP Address"] = str(single_data["IP Address"]).strip()
             single_data["Receipt Date"] = str(single_data["Receipt Date"]).strip()
 
@@ -473,11 +384,13 @@ def home():
             # Upload video and get final URL
             upload_result = save_video_link(video_path, video_filename)
             video_url = upload_result["video_url"]
+            recording_id = upload_result["recording_id"]
             storage_path = upload_result.get("storage_path")
 
             # Create certificate after successful video upload
             certificate_result = create_certificate_for_lead(
                 lead_data=single_row,
+                recording_id=recording_id,
                 recording_url=video_url,
                 recording_storage_path=storage_path
             )
@@ -522,7 +435,7 @@ def home():
             flash("Could not read the spreadsheet. Please check the file and try again.")
             return redirect(request.url)
 
-        required_columns = ["First Name", "Last Name", "Mobile Phone", "State", "Has Medicare"]
+        required_columns = ["First Name", "Last Name", "Mobile Phone", "Tax Debt Amount"]
 
         missing_required_rows = []
 
@@ -546,7 +459,7 @@ def home():
         results = []
 
         for idx, row in df.iterrows():
-            video_filename = f"telemd_video_{idx + 1}.mp4"
+            video_filename = f"cacophinney_video_{idx + 1}.mp4"
             video_path = VIDEOS_FOLDER / video_filename
 
             fill_form_and_record(row, video_path)
@@ -554,6 +467,7 @@ def home():
             # Upload video and get final URL
             upload_result = save_video_link(video_path, video_filename)
             video_url = upload_result["video_url"]
+            recording_id = upload_result["recording_id"]
             storage_path = upload_result.get("storage_path")
 
             video_links.append(video_url)
@@ -561,6 +475,7 @@ def home():
             # Create certificate after successful video upload
             certificate_result = create_certificate_for_lead(
                 lead_data=row,
+                recording_id=recording_id,
                 recording_url=video_url,
                 recording_storage_path=storage_path
             )
@@ -585,30 +500,105 @@ def home():
     return render_template("upload.html")
 
 
-@app.route("/form", methods=["GET", "POST"])
-def form():
-    if request.method == "POST":
-        form_data = request.form.to_dict(flat=False)
-        print("TeleMD local form submitted:")
-        print(form_data)
-
-        return redirect(url_for("submitted"))
-
-    return render_template("form.html")
-
-
-@app.route("/submitted")
-def submitted():
-    return render_template("submitted.html")
-
-
 @app.route("/videos/<filename>")
 def videos(filename):
     return send_from_directory(VIDEOS_FOLDER, filename)
 
 
+# ========================================
+# JSON API Routes for Next.js Frontend
+# ========================================
+
+@app.route("/api/health", methods=["GET"])
+def api_health():
+    """Health check endpoint"""
+    return jsonify({"status": "ok", "service": "cacophiney"}), 200
+
+
+@app.route("/api/generate/single", methods=["POST"])
+def api_generate_single():
+    """
+    JSON API endpoint for single lead video generation.
+    Expects JSON payload with lead data.
+    """
+    try:
+        data = request.get_json()
+
+        if not data:
+            return jsonify({"success": False, "error": "No JSON data provided"}), 400
+
+        # Map JSON field names to expected format
+        lead_data = {
+            "First Name": data.get("firstName", ""),
+            "Last Name": data.get("lastName", ""),
+            "Mobile Phone": data.get("phone", ""),
+            "Email": data.get("email", ""),
+            "ZIP Code": data.get("zipCode", ""),
+            "Tax Debt": normalize_tax_debt_value(data.get("debtAmount", "")),
+            "Debt Type": data.get("debtType", ""),
+            "Unfiled Returns": data.get("unfiled", ""),
+            "Enforcement Status": data.get("enforcement", ""),
+            "Income Type": data.get("income", ""),
+            "Contact Consent": "yes" if data.get("tcpaConsent") else "no",
+            "IP Address": data.get("ipAddress", ""),
+            "Receipt Date": data.get("tcpaConsentTimestamp", ""),
+        }
+
+        # Validate required fields
+        required_fields = [
+            lead_data["First Name"], lead_data["Last Name"], lead_data["Mobile Phone"],
+            lead_data["Email"], lead_data["ZIP Code"],
+        ]
+        if not all(str(field).strip() for field in required_fields):
+            return jsonify({
+                "success": False,
+                "error": "First Name, Last Name, Mobile Phone, Email, and ZIP Code are required"
+            }), 400
+
+        # Generate video
+        print(f"[API] Processing single lead: {lead_data.get('First Name')} {lead_data.get('Last Name')}")
+
+        video_path = fill_form_and_record(lead_data)
+
+        if not video_path:
+            return jsonify({
+                "success": False,
+                "error": "Video generation failed"
+            }), 500
+
+        video_filename = Path(video_path).name
+        video_info = save_video_link(video_path, video_filename)
+
+        # Create certificate
+        certificate_result = create_certificate_for_lead(
+            lead_data=lead_data,
+            recording_id=video_info["recording_id"],
+            recording_url=video_info["video_url"],
+            recording_storage_path=video_info.get("storage_path")
+        )
+
+        response = {
+            "success": True,
+            "video": {
+                "success": True,
+                "recording_id": video_info["recording_id"],
+                "video_url": video_info["video_url"]
+            },
+            "certificate": certificate_result
+        }
+
+        return jsonify(response), 200
+
+    except Exception as e:
+        print(f"[API Error] {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+
 if __name__ == "__main__":
-    # Read port from environment (default 5003)
-    # Port 5000 is used by macOS AirPlay, so we use 5001-5003 for Python apps
-    port = int(os.environ.get("PORT", 5003))
+    port = int(os.environ.get("PORT", 5002))
     app.run(debug=True, threaded=True, port=port)

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TeleMD Video Automation</title>
+    <title>Cacophinney Tax Relief - Video Automation</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #e8f0f8;
+            background: #f8f6f2;
             min-height: 100vh;
             padding: 40px 20px;
         }
@@ -25,24 +25,21 @@
             position: absolute;
             top: 20px;
             right: 30px;
-            background: #10b981;
+            background: #122a3f;
             color: white;
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
         h1 {
             font-size: 28px;
             font-weight: 700;
-            color: #1e3a8a;
+            color: #122a3f;
             margin-bottom: 12px;
         }
         .subtitle {
-            color: #64748b;
+            color: #5b6a76;
             font-size: 15px;
             line-height: 1.6;
             margin-bottom: 36px;
@@ -50,7 +47,7 @@
         .section-label {
             font-size: 13px;
             font-weight: 600;
-            color: #1e3a8a;
+            color: #122a3f;
             margin-bottom: 16px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -58,17 +55,15 @@
         h2 {
             font-size: 19px;
             font-weight: 700;
-            color: #0f172a;
+            color: #182430;
             margin-bottom: 8px;
         }
         .section-desc {
-            color: #64748b;
+            color: #5b6a76;
             font-size: 14px;
             margin-bottom: 24px;
         }
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .form-group { margin-bottom: 20px; }
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -78,42 +73,32 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #0f172a;
+            color: #182430;
             font-size: 14px;
         }
-        .required { color: #3b82f6; }
+        .required { color: #c0622f; }
         input[type="text"],
         input[type="email"],
         input[type="tel"],
         input[type="file"],
-        select,
-        textarea {
+        select {
             width: 100%;
             padding: 11px 14px;
-            border: 1px solid #cbd5e1;
+            border: 1px solid #dcd6cc;
             border-radius: 8px;
             font-size: 15px;
             transition: border-color 0.2s;
             background: white;
-            color: #0f172a;
+            color: #182430;
         }
-        input::placeholder,
-        textarea::placeholder {
-            color: #94a3b8;
-        }
-        input:focus, select:focus, textarea:focus {
+        input:focus, select:focus {
             outline: none;
-            border-color: #3b82f6;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 90px;
-            font-family: inherit;
+            border-color: #c0622f;
         }
         button[type="submit"] {
             width: 100%;
             padding: 14px;
-            background: #3b82f6;
+            background: #122a3f;
             color: white;
             border: none;
             border-radius: 8px;
@@ -124,12 +109,12 @@
             margin-top: 8px;
         }
         button[type="submit"]:hover {
-            background: #2563eb;
+            background: #0b1d2c;
         }
         .section-divider {
             margin: 40px 0;
             border: 0;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid #dcd6cc;
         }
         .flash {
             padding: 12px 16px;
@@ -142,7 +127,7 @@
         .footer {
             margin-top: 50px;
             padding-top: 30px;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid #dcd6cc;
             text-align: center;
         }
         .footer-links {
@@ -153,17 +138,14 @@
             flex-wrap: wrap;
         }
         .footer-link {
-            color: #64748b;
+            color: #5b6a76;
             text-decoration: none;
             font-size: 13px;
-            transition: color 0.2s;
         }
-        .footer-link:hover {
-            color: #3b82f6;
-        }
+        .footer-link:hover { color: #c0622f; }
         .footer-text {
             font-size: 12px;
-            color: #94a3b8;
+            color: #9ca3af;
         }
         /* Loading Overlay */
         .loading-overlay {
@@ -173,7 +155,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(30, 58, 138, 0.95);
+            background: rgba(18, 42, 63, 0.95);
             z-index: 9999;
             justify-content: center;
             align-items: center;
@@ -185,8 +167,8 @@
         .spinner {
             width: 60px;
             height: 60px;
-            border: 4px solid rgba(59, 130, 246, 0.3);
-            border-top-color: #3b82f6;
+            border: 4px solid rgba(192, 98, 47, 0.3);
+            border-top-color: #c0622f;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -218,9 +200,8 @@
     </div>
     <div class="container">
         <div class="secure-badge">🔒 Secure</div>
-
-        <h1>TeleMD video automation</h1>
-        <p class="subtitle">Upload eligibility lead data or run a single test entry. Each row will fill the recreated TeleMD form and generate a local screen recording.</p>
+        <h1>Cacophinney Tax Relief</h1>
+        <p class="subtitle">Upload tax relief lead data or run a single test entry. Each row will fill the tax relief form and generate a screen recording with Eperkins certificate.</p>
 
         {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -230,32 +211,27 @@
             {% endif %}
         {% endwith %}
 
-        <!-- Bulk Mode Section -->
         <div class="section-label">Bulk mode</div>
         <h2>Upload CSV or Excel</h2>
-        <p class="section-desc">Use this when you have multiple eligibility rows to process.</p>
+        <p class="section-desc">Use this when you have multiple tax relief leads to process.</p>
 
         <form method="POST" enctype="multipart/form-data">
             <input type="hidden" name="mode" value="excel">
-
             <div class="form-group">
                 <label>Upload file <span class="required">*</span></label>
                 <input type="file" name="file" accept=".csv,.xlsx" required>
             </div>
-
             <button type="submit">Generate videos</button>
         </form>
 
         <hr class="section-divider">
 
-        <!-- Single Mode Section -->
         <div class="section-label">Single mode</div>
         <h2>Run one test entry</h2>
-        <p class="section-desc">Use this to quickly test the new eligibility form and video output.</p>
+        <p class="section-desc">Use this to quickly test the tax relief form and video output.</p>
 
         <form method="POST">
             <input type="hidden" name="mode" value="single">
-
             <div class="form-row">
                 <div class="form-group">
                     <label>First name <span class="required">*</span></label>
@@ -266,68 +242,37 @@
                     <input type="text" name="last_name" required>
                 </div>
             </div>
-
             <div class="form-group">
                 <label>Mobile phone <span class="required">*</span></label>
                 <input type="tel" name="mobile_phone" placeholder="(555) 123-4567" required>
             </div>
-
             <div class="form-group">
-                <label>Email (optional)</label>
-                <input type="email" name="email" placeholder="you@example.com">
+                <label>Email <span class="required">*</span></label>
+                <input type="email" name="email" placeholder="you@example.com" required>
             </div>
-
+            <div class="form-group">
+                <label>ZIP Code <span class="required">*</span></label>
+                <input type="text" name="zip_code" placeholder="12345" required>
+            </div>
+            <div class="form-group">
+                <label>Tax Debt Amount</label>
+                <select name="tax_debt_amount">
+                    <option value="">Select...</option>
+                    <option value="Under $10,000">Under $10,000</option>
+                    <option value="$10,000 – $24,999">$10,000 – $24,999</option>
+                    <option value="$25,000 – $49,999">$25,000 – $49,999</option>
+                    <option value="$50,000 – $99,999">$50,000 – $99,999</option>
+                    <option value="$100,000+">$100,000+</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label>IP Address (optional)</label>
                 <input type="text" name="ip_address" placeholder="24.85.132.44">
             </div>
-
             <div class="form-group">
                 <label>Receipt Date (optional)</label>
-                <input type="text" name="receipt_date" placeholder="dd/mm/yyyy">
+                <input type="text" name="receipt_date" placeholder="2026-07-22">
             </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>State <span class="required">*</span></label>
-                    <select name="state" required>
-                        <option value="">Select...</option>
-                        <option value="CA">California</option>
-                        <option value="NY">New York</option>
-                        <option value="TX">Texas</option>
-                        <option value="FL">Florida</option>
-                        <option value="IL">Illinois</option>
-                        <option value="PA">Pennsylvania</option>
-                        <option value="OH">Ohio</option>
-                        <option value="GA">Georgia</option>
-                        <option value="NC">North Carolina</option>
-                        <option value="MI">Michigan</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Have Medicare? <span class="required">*</span></label>
-                    <select name="has_medicare" required>
-                        <option value="">Select...</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                        <option value="Not sure">Not sure</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Ongoing conditions (optional)</label>
-                <textarea name="ongoing_conditions" placeholder="e.g., high blood pressure, diabetes, COPD"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Tax Debt Consent (default: yes)</label>
-                <select name="tax_debt_consent">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-            </div>
-
             <button type="submit">Generate single video</button>
         </form>
 
@@ -336,9 +281,8 @@
                 <a href="/" class="footer-link">🏠 Home</a>
                 <a href="http://localhost:3000/certificates" target="_blank" class="footer-link">📜 View Certificates</a>
                 <a href="http://localhost:3000/admin/certificates" target="_blank" class="footer-link">⚙️ Admin</a>
-                <a href="/videos/single_entry_video.mp4" target="_blank" class="footer-link">🎬 Latest Video</a>
             </div>
-            <p class="footer-text">TeleMD Video Automation · Powered by Eperkins Law</p>
+            <p class="footer-text">Cacophinney Tax Relief Video Automation · Powered by Eperkins Law</p>
         </div>
     </div>
 

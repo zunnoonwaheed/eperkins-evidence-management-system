@@ -1,0 +1,139 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background: #0a2230;
+    color: #1d2a36;
+}
+
+.page-shell {
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.card {
+    width: min(1120px, 100%);
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+}
+
+h1 {
+    margin: 0 0 10px;
+    font-size: 34px;
+}
+
+h2 {
+    margin: 0 0 14px;
+    font-size: 22px;
+}
+
+.subtext {
+    color: #536170;
+    margin-bottom: 24px;
+}
+
+.grid {
+    display: grid;
+    gap: 20px;
+}
+
+.grid.two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid.compact {
+    gap: 12px;
+}
+
+.panel {
+    border: 1px solid #d7dde3;
+    border-radius: 16px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    font-weight: 700;
+    color: #374554;
+}
+
+small {
+    color: #7b8793;
+    font-weight: 500;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #cfd7df;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+button,
+.button-link {
+    border: 0;
+    background: #c45a2a;
+    color: white;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+button:hover,
+.button-link:hover {
+    background: #a94820;
+}
+
+.flash {
+    border: 1px solid #e2a45f;
+    background: #fff7ec;
+    color: #7b3f12;
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+}
+
+.schema {
+    margin-top: 24px;
+}
+
+pre {
+    overflow-x: auto;
+    background: #f4f6f8;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #dce2e8;
+}
+
+.video-list {
+    line-height: 1.9;
+}
+
+@media (max-width: 800px) {
+    .grid.two {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 22px;
+    }
+}

@@ -159,7 +159,7 @@ async function automationWorkflow(
   console.log('========================================');
   console.log('Video generation: SUCCESS');
   console.log('Video upload: SUCCESS');
-  console.log('Certificate creation: ' + (result.success ? 'SUCCESS' : 'FAILED (non-blocking)'));
+  console.log('Certificate creation: NON-BLOCKING (see logs above)');
   console.log('========================================\n');
 }
 
