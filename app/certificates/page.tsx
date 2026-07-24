@@ -4,7 +4,7 @@ import CertificateCard from '@/components/certificate/CertificateCard';
 import { getAllCertificates } from '@/lib/database/certificate-repository';
 
 export const metadata = {
-  title: 'All Certificates — E Perkins Law',
+  title: 'All Certificates',
   description: 'View all consent verification certificates',
 };
 

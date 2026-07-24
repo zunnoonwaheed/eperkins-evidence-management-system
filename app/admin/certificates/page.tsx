@@ -15,14 +15,13 @@
  */
 
 import Link from 'next/link';
-import Footer from '@/components/layout/Footer';
 import { getCertificatesWithFilters } from '@/lib/database/certificate-repository';
 import { getAllCompanies } from '@/lib/database/company-repository';
 import type { CertificateDisplay } from '@/types/certificate';
 import type { CertificateStatus } from '@/types/certificate';
 
 export const metadata = {
-  title: 'Admin - All Certificates — E Perkins Law',
+  title: 'Admin - All Certificates',
   description: 'Manage all consent verification certificates',
 };
 
@@ -295,8 +294,6 @@ export default async function AdminCertificatesPage({ searchParams }: AdminCerti
           </div>
         )}
       </div>
-
-      <Footer />
     </div>
   );
 }

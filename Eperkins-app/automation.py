@@ -6,7 +6,7 @@ import time
 import re
 
 
-SITE_URL = "http://www.myrpmcare.com/#eligibility"
+SITE_URL = "https://www.myrpmcare.com/#eligibility"
 
 
 US_STATE_OPTIONS = [

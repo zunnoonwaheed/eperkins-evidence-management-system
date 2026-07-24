@@ -148,7 +148,7 @@ export default function HomePage() {
 
       <footer>
         <div className="wrap">
-          <div className="brand display">E Perkins Law</div>
+          <div className="brand display">Certificate System</div>
           <div>Consent verification certificates</div>
         </div>
       </footer>

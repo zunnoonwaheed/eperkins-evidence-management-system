@@ -81,13 +81,13 @@ cp .env.example .env
 Edit `.env` and configure:
 
 ```env
-# Certificate API
-CERTIFICATE_API_URL=https://api.rpmcare.com/api/certificates/create
-CERTIFICATE_API_KEY=production_key_rpmcare_12345
+# Certificate API (Central Eperkins System)
+CERTIFICATE_API_URL=https://eperkinslaw.com/api/certificates/create
+CERTIFICATE_API_KEY=production_key_myrpmcare_12345
 
 # Company Configuration
-COMPANY_KEY=rpmcare
-WEBSITE=rpmcare.com
+COMPANY_KEY=myrpmcare
+WEBSITE=myrpmcare.com
 SOURCE_SYSTEM=rpm-video-automation
 
 # Google Cloud Storage (optional)
@@ -285,7 +285,7 @@ Use the single entry form at http://localhost:5000 with test data.
 
 1. Navigate to your certificate admin dashboard
 2. Verify the certificate appears with:
-   - Correct company (rpmcare)
+   - Correct company (myrpmcare)
    - Correct lead data
    - Correct video URL
    - Correct timestamps
@@ -349,7 +349,7 @@ Eperkins-app/
 **Problem:** Company key mismatch or database not configured
 
 **Solution:**
-1. Verify `COMPANY_KEY=rpmcare` in `.env`
+1. Verify `COMPANY_KEY=myrpmcare` in `.env`
 2. Check Supabase connection in Next.js app
 3. Run Next.js with `npm run dev` to see API logs
 4. Check the Supabase certificates table
@@ -397,10 +397,10 @@ playwright install chromium
 ### Environment Variables for Production
 
 ```env
-CERTIFICATE_API_URL=https://api.rpmcare.com/api/certificates/create
+CERTIFICATE_API_URL=https://eperkinslaw.com/api/certificates/create
 CERTIFICATE_API_KEY=<secure-production-key>
-COMPANY_KEY=rpmcare
-WEBSITE=rpmcare.com
+COMPANY_KEY=myrpmcare
+WEBSITE=myrpmcare.com
 SOURCE_SYSTEM=rpm-video-automation
 GCS_BUCKET_NAME=production-video-bucket
 FLASK_SECRET_KEY=<secure-random-key>

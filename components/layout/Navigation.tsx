@@ -19,7 +19,7 @@ export default function Navigation() {
       <div className="wrap">
         <Link href="/" className="brand">
           <span className="brand-mark">✓</span>
-          E Perkins Law
+          Certificate System
         </Link>
         <button
           className={`hamburger ${isMenuOpen ? 'active' : ''}`}

@@ -27,12 +27,12 @@ export async function generateMetadata({ params }: CertificatePageProps): Promis
 
   if (!certificate) {
     return {
-      title: 'Certificate Not Found — E Perkins Law',
+      title: 'Certificate Not Found',
     };
   }
 
   return {
-    title: `Certificate — ${certificate.fullName} — E Perkins Law`,
+    title: `Certificate — ${certificate.fullName}`,
     description: `Verified consent certificate for ${certificate.fullName}. Signed on ${certificate.signedDate}.`,
   };
 }
