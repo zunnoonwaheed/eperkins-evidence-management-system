@@ -18,9 +18,16 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "local-dev-secret-key")
 
-# Enable CORS for production frontend
-frontend_url = os.getenv("FRONTEND_URL", "https://eperkinslaw.com")
-CORS(app, resources={r"/videos/*": {"origins": [frontend_url]}})
+# Configure CORS from the production environment
+allowed_origins = [
+    origin.strip()
+    for origin in os.getenv(
+        "ALLOWED_ORIGINS",
+        os.getenv("FRONTEND_URL", "http://localhost:3000")
+    ).split(",")
+    if origin.strip()
+]
+CORS(app, resources={r"/videos/*": {"origins": allowed_origins}})
 
 BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_FOLDER = BASE_DIR / "uploads"
