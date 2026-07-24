@@ -1393,12 +1393,12 @@ def hide_receipt_until_override(page):
         page.evaluate(
             """
             () => {
-                window.__hideTeleMDReceipt = true;
+                window.__hideRPMCareReceipt = true;
 
                 const normalize = (text) => (text || "").replace(/\\s+/g, " ").trim();
 
                 const hideReceipt = () => {
-                    if (!window.__hideTeleMDReceipt) return;
+                    if (!window.__hideRPMCareReceipt) return;
 
                     const candidates = Array.from(document.querySelectorAll("*"))
                         .filter((el) => {
@@ -1424,12 +1424,12 @@ def hide_receipt_until_override(page):
                     }
                 };
 
-                window.__hideTeleMDReceiptNow = hideReceipt;
+                window.__hideRPMCareReceiptNow = hideReceipt;
 
                 hideReceipt();
 
-                if (window.__telemdHideReceiptObserver) {
-                    window.__telemdHideReceiptObserver.disconnect();
+                if (window.__rpmcareHideReceiptObserver) {
+                    window.__rpmcareHideReceiptObserver.disconnect();
                 }
 
                 const observer = new MutationObserver(hideReceipt);
@@ -1440,7 +1440,7 @@ def hide_receipt_until_override(page):
                     characterData: true
                 });
 
-                window.__telemdHideReceiptObserver = observer;
+                window.__rpmcareHideReceiptObserver = observer;
             }
             """
         )
@@ -1461,11 +1461,11 @@ def show_receipt_after_override(page):
         page.evaluate(
             """
             () => {
-                window.__hideTeleMDReceipt = false;
+                window.__hideRPMCareReceipt = false;
 
-                if (window.__telemdHideReceiptObserver) {
-                    window.__telemdHideReceiptObserver.disconnect();
-                    window.__telemdHideReceiptObserver = null;
+                if (window.__rpmcareHideReceiptObserver) {
+                    window.__rpmcareHideReceiptObserver.disconnect();
+                    window.__rpmcareHideReceiptObserver = null;
                 }
 
                 document.querySelectorAll('[data-demo-hidden-receipt="true"]').forEach((el) => {

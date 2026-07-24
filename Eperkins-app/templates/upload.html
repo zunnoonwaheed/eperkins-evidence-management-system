@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TeleMD Video Automation</title>
+    <title>RPMCare Video Automation</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -139,32 +139,6 @@
             border-radius: 8px;
             border-left: 4px solid #dc2626;
         }
-        .footer {
-            margin-top: 50px;
-            padding-top: 30px;
-            border-top: 1px solid #e2e8f0;
-            text-align: center;
-        }
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        .footer-link {
-            color: #64748b;
-            text-decoration: none;
-            font-size: 13px;
-            transition: color 0.2s;
-        }
-        .footer-link:hover {
-            color: #3b82f6;
-        }
-        .footer-text {
-            font-size: 12px;
-            color: #94a3b8;
-        }
         /* Loading Overlay */
         .loading-overlay {
             display: none;
@@ -219,8 +193,8 @@
     <div class="container">
         <div class="secure-badge">🔒 Secure</div>
 
-        <h1>TeleMD video automation</h1>
-        <p class="subtitle">Upload eligibility lead data or run a single test entry. Each row will fill the recreated TeleMD form and generate a local screen recording.</p>
+        <h1>RPMCare video automation</h1>
+        <p class="subtitle">Upload eligibility lead data or run a single test entry. Each row will fill the recreated RPMCare form and generate a local screen recording.</p>
 
         {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -331,15 +305,6 @@
             <button type="submit">Generate single video</button>
         </form>
 
-        <div class="footer">
-            <div class="footer-links">
-                <a href="/" class="footer-link">🏠 Home</a>
-                <a href="http://localhost:3000/certificates" target="_blank" class="footer-link">📜 View Certificates</a>
-                <a href="http://localhost:3000/admin/certificates" target="_blank" class="footer-link">⚙️ Admin</a>
-                <a href="/videos/single_entry_video.mp4" target="_blank" class="footer-link">🎬 Latest Video</a>
-            </div>
-            <p class="footer-text">TeleMD Video Automation · Powered by Eperkins Law</p>
-        </div>
     </div>
 
     <script>

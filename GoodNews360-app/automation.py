@@ -647,7 +647,7 @@ def first_visible_locator(page, locators):
 
 
 def wait_for_landing(page):
-    print("[Debug] Waiting for Savings Check America landing/survey")
+    print("[Debug] Waiting for survey landing page")
     candidates = [
         page.get_by_text(re.compile(r"Start My Free Survey", re.I)),
         page.get_by_role("button", name=re.compile(r"Start.*Survey", re.I)),
@@ -1114,7 +1114,7 @@ def fill_form_and_record(data, video_path):
         set_ip_address_on_page(page, ip_address)
 
         if not wait_for_landing(page):
-            raise RuntimeError("Could not locate Savings Check America landing/survey on the live site.")
+            raise RuntimeError("Could not locate survey landing page on the live site.")
 
         click_start_if_present(page, user_profile)
 

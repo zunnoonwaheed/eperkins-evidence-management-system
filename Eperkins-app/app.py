@@ -18,8 +18,9 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "local-dev-secret-key")
 
-# Enable CORS so Next.js app (localhost:3000) can access videos
-CORS(app, resources={r"/videos/*": {"origins": ["http://localhost:3000", "http://localhost:3001"]}})
+# Enable CORS for production frontend
+frontend_url = os.getenv("FRONTEND_URL", "https://eperkinslaw.com")
+CORS(app, resources={r"/videos/*": {"origins": [frontend_url]}})
 
 BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_FOLDER = BASE_DIR / "uploads"
@@ -167,7 +168,7 @@ def normalize_col_name(value):
 def _normalize_dataframe(df):
     """
     Normalizes uploaded CSV/XLSX files into the exact fields needed by the
-    current TeleMD eligibility form.
+    current RPMCare eligibility form.
     Supports clean headers and rough headers.
     """
 
@@ -546,7 +547,7 @@ def home():
         results = []
 
         for idx, row in df.iterrows():
-            video_filename = f"telemd_video_{idx + 1}.mp4"
+            video_filename = f"rpmcare_video_{idx + 1}.mp4"
             video_path = VIDEOS_FOLDER / video_filename
 
             fill_form_and_record(row, video_path)
@@ -589,7 +590,7 @@ def home():
 def form():
     if request.method == "POST":
         form_data = request.form.to_dict(flat=False)
-        print("TeleMD local form submitted:")
+        print("RPMCare local form submitted:")
         print(form_data)
 
         return redirect(url_for("submitted"))

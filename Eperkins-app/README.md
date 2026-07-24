@@ -1,6 +1,6 @@
-# RPM Care Video Automation with Eperkins Certificate Integration
+# RPM Care Video Automation with Certificate Integration
 
-This Python automation application generates videos by filling out the TeleMD eligibility form on myrpmcare.com and automatically creates Eperkins certificates for each successful video generation.
+This Python automation application generates videos by filling out the RPMCare eligibility form on myrpmcare.com and automatically creates certificates for each successful video generation.
 
 ## Overview
 
@@ -9,7 +9,7 @@ The application:
 2. Uses Playwright to automate form filling on the real website
 3. Records the form filling process as a video
 4. Uploads the video to Google Cloud Storage (optional)
-5. **Automatically creates an Eperkins certificate** via the certificate API
+5. **Automatically creates a certificate** via the certificate API
 6. Returns both the video URL and certificate details
 
 ## Integration Flow
@@ -25,7 +25,7 @@ Video Upload to GCS (optional)
     ↓
 Final Video URL Available
     ↓
-Eperkins Certificate API Call ← **CERTIFICATE CREATED HERE**
+Certificate API Call ← **CERTIFICATE CREATED HERE**
     ↓
 Certificate UUID & URL Returned
     ↓
@@ -35,8 +35,8 @@ Results Displayed
 ## Prerequisites
 
 1. **Python 3.8+** installed
-2. **Eperkins Next.js app** running on http://localhost:3000
-3. **Supabase** configured in the Eperkins app
+2. **Next.js app** running on http://localhost:3000
+3. **Supabase** configured in the Next.js app
 4. **Google Cloud credentials** (optional, for GCS upload)
 5. **FFmpeg** installed (for video conversion)
 
@@ -81,20 +81,20 @@ cp .env.example .env
 Edit `.env` and configure:
 
 ```env
-# Eperkins Certificate API
-EPERKINS_CERTIFICATE_API_URL=http://localhost:3000/api/certificates/create
-EPERKINS_CERTIFICATE_API_KEY=dev_key_myrpmcare_12345
+# Certificate API
+CERTIFICATE_API_URL=https://api.rpmcare.com/api/certificates/create
+CERTIFICATE_API_KEY=production_key_rpmcare_12345
 
 # Company Configuration
-EPERKINS_COMPANY_KEY=myrpmcare
-EPERKINS_WEBSITE=myrpmcare.com
-EPERKINS_SOURCE_SYSTEM=rpm-video-automation
+COMPANY_KEY=rpmcare
+WEBSITE=rpmcare.com
+SOURCE_SYSTEM=rpm-video-automation
 
 # Google Cloud Storage (optional)
 GCS_BUCKET_NAME=your-bucket-name
 ```
 
-**Important:** The `EPERKINS_CERTIFICATE_API_KEY` must match the `CERT_API_KEY_MYRPMCARE` value in the Eperkins Next.js `.env.local` file.
+**Important:** The `CERTIFICATE_API_KEY` must match the API key configured in your production environment.
 
 ### 5. Configure Google Cloud Storage (Optional)
 
@@ -111,14 +111,14 @@ If not using GCS, videos will be served locally from the `videos/` folder.
 
 ## Running the Application
 
-### Start the Eperkins Next.js App First
+### Start the Next.js App First
 
 ```bash
-cd /path/to/eperkins
+cd /path/to/rpmcare
 npm run dev
 ```
 
-The Eperkins app should be running on http://localhost:3000.
+The Next.js app should be running on http://localhost:3000.
 
 ### Start the Python Automation App
 
@@ -140,7 +140,7 @@ The Flask app will start on http://localhost:5000.
    - Automate the form filling
    - Record the video
    - Upload to GCS (if configured)
-   - **Create an Eperkins certificate**
+   - **Create a certificate**
    - Display results with video URL and certificate URL
 
 ### Bulk Upload (CSV/Excel)
@@ -170,7 +170,7 @@ Certificates are created **immediately after** the video is successfully uploade
 
 ### Certificate Payload
 
-For each lead, the following data is sent to the Eperkins API:
+For each lead, the following data is sent to the Certificate API:
 
 ```json
 {
@@ -281,11 +281,11 @@ This will verify:
 
 Use the single entry form at http://localhost:5000 with test data.
 
-### 3. Verify in Eperkins
+### 3. Verify Certificates
 
-1. Navigate to http://localhost:3000/admin/certificates
+1. Navigate to your certificate admin dashboard
 2. Verify the certificate appears with:
-   - Correct company (myrpmcare)
+   - Correct company (rpmcare)
    - Correct lead data
    - Correct video URL
    - Correct timestamps
@@ -297,7 +297,7 @@ Eperkins-app/
 ├── app.py                           # Main Flask application
 ├── automation.py                    # Playwright automation logic
 ├── gcs_util.py                      # Google Cloud Storage utilities
-├── eperkins_certificate_client.py  # Eperkins API client
+├── certificate_client.py            # Certificate API client
 ├── certificate_payload.py           # Payload builder
 ├── test_certificate_integration.py # Integration tests
 ├── requirements.txt                 # Python dependencies
@@ -339,8 +339,8 @@ Eperkins-app/
 **Problem:** API key mismatch
 
 **Solution:**
-1. Check `EPERKINS_CERTIFICATE_API_KEY` in Python `.env`
-2. Check `CERT_API_KEY_MYRPMCARE` in Next.js `.env.local`
+1. Check `CERTIFICATE_API_KEY` in Python `.env`
+2. Check API key configuration in your production environment
 3. Ensure they match exactly
 4. Restart both applications
 
@@ -349,10 +349,10 @@ Eperkins-app/
 **Problem:** Company key mismatch or database not configured
 
 **Solution:**
-1. Verify `EPERKINS_COMPANY_KEY=myrpmcare` in `.env`
+1. Verify `COMPANY_KEY=rpmcare` in `.env`
 2. Check Supabase connection in Next.js app
 3. Run Next.js with `npm run dev` to see API logs
-4. Check the Eperkins Supabase certificates table
+4. Check the Supabase certificates table
 
 ### Video Succeeds but Certificate Shows Warning
 
@@ -397,11 +397,11 @@ playwright install chromium
 ### Environment Variables for Production
 
 ```env
-EPERKINS_CERTIFICATE_API_URL=https://yourdomain.com/api/certificates/create
-EPERKINS_CERTIFICATE_API_KEY=<secure-production-key>
-EPERKINS_COMPANY_KEY=myrpmcare
-EPERKINS_WEBSITE=myrpmcare.com
-EPERKINS_SOURCE_SYSTEM=rpm-video-automation
+CERTIFICATE_API_URL=https://api.rpmcare.com/api/certificates/create
+CERTIFICATE_API_KEY=<secure-production-key>
+COMPANY_KEY=rpmcare
+WEBSITE=rpmcare.com
+SOURCE_SYSTEM=rpm-video-automation
 GCS_BUCKET_NAME=production-video-bucket
 FLASK_SECRET_KEY=<secure-random-key>
 ```
@@ -420,6 +420,6 @@ FLASK_SECRET_KEY=<secure-random-key>
 
 For issues or questions:
 1. Check the troubleshooting section
-2. Review Next.js Eperkins app logs
+2. Review Next.js app logs
 3. Check Python Flask app console output
 4. Verify Supabase database state

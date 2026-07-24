@@ -75,6 +75,7 @@ test-results/
 # Environment files
 .env
 !.env.example
+.env-backups/
 
 # Certificate log
 certificate_log.txt

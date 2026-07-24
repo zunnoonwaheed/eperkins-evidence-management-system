@@ -49,7 +49,7 @@ ADDED NEW SECTION:
 
   💡 All consents are checked by default. Uncheck to set to "no"
 
-✅ Proper checkboxes that match the real TeleMD form!
+✅ Proper checkboxes that match the real RPMCare form!
 
 --------------------------------------------------------------------------------
 4. VISUAL ORGANIZATION - BETTER SECTIONS

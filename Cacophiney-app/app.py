@@ -11,7 +11,7 @@ from certificate_payload import build_certificate_payload, get_current_utc_iso
 
 
 app = Flask(__name__)
-app.secret_key = "local-dev-secret-key"
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-secret-key-change-in-production")
 
 # Configure CORS for Next.js frontend
 CORS(app, origins=[os.getenv("FRONTEND_URL", "http://localhost:3002")])

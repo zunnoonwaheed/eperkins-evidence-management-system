@@ -19,57 +19,9 @@ export default function Footer() {
         }}>
           {/* Brand */}
           <div>
-            <div className="brand display" style={{ marginBottom: '8px' }}>E Perkins Law</div>
+            <div className="brand display" style={{ marginBottom: '8px' }}>Certificate System</div>
             <div style={{ color: 'var(--ink-soft)', fontSize: '14px' }}>
               Consent verification certificates
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <div style={{
-              fontSize: '13px',
-              fontWeight: 600,
-              color: 'var(--ink)',
-              marginBottom: '12px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px'
-            }}>
-              Quick Links
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <Link
-                href="/certificates"
-                style={{
-                  color: 'var(--ink-soft)',
-                  textDecoration: 'none',
-                  fontSize: '14px',
-                }}
-              >
-                📜 All Certificates
-              </Link>
-              <Link
-                href="/admin/certificates"
-                style={{
-                  color: 'var(--ink-soft)',
-                  textDecoration: 'none',
-                  fontSize: '14px',
-                }}
-              >
-                ⚙️ Admin Dashboard
-              </Link>
-              <a
-                href="http://localhost:5001"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  color: 'var(--ink-soft)',
-                  textDecoration: 'none',
-                  fontSize: '14px',
-                }}
-              >
-                🎬 Video Automation
-              </a>
             </div>
           </div>
 
@@ -117,7 +69,7 @@ export default function Footer() {
           color: 'var(--ink-soft)',
           fontSize: '13px'
         }}>
-          © {new Date().getFullYear()} E Perkins Law. All rights reserved.
+          © {new Date().getFullYear()} Certificate System. All rights reserved.
         </div>
       </div>
     </footer>

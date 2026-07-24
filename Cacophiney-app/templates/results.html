@@ -130,32 +130,6 @@
         .badge.warning {
             background: #f59e0b;
         }
-        .footer {
-            margin-top: 40px;
-            padding-top: 25px;
-            border-top: 1px solid #dcd6cc;
-            text-align: center;
-        }
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-        .footer-link {
-            color: #5b6a76;
-            text-decoration: none;
-            font-size: 13px;
-            transition: color 0.2s;
-        }
-        .footer-link:hover {
-            color: #c0622f;
-        }
-        .footer-text {
-            font-size: 12px;
-            color: #9ca3af;
-        }
     </style>
 </head>
 <body>
@@ -168,7 +142,7 @@
         <div class="content">
             <div class="success-box">
                 <h2>🎉 All Done!</h2>
-                <p>Generated {{ video_links|length }} video(s) with Eperkins certificates</p>
+                <p>Generated {{ video_links|length }} video(s) with certificates</p>
             </div>
 
             {% if results %}
@@ -240,14 +214,6 @@
 
             <a href="/" class="back-link">← Generate More Videos</a>
 
-            <div class="footer">
-                <div class="footer-links">
-                    <a href="/" class="footer-link">🏠 Home</a>
-                    <a href="http://localhost:3000/certificates" target="_blank" class="footer-link">📜 View All Certificates</a>
-                    <a href="http://localhost:3000/admin/certificates" target="_blank" class="footer-link">⚙️ Admin Dashboard</a>
-                </div>
-                <p class="footer-text">Cacophinney Tax Relief Video Automation · Powered by Eperkins Law</p>
-            </div>
         </div>
     </div>
 </body>
