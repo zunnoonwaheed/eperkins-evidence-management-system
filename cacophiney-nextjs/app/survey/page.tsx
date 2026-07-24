@@ -20,46 +20,13 @@ interface SurveyData {
   ipAddress: string;
 }
 
-interface ApiResponse {
-  success: boolean;
-  video?: {
-    url: string;
-    recording_id: string;
-    storage_path?: string;
-  };
-  certificate?: {
-    cert_uuid: string;
-    certificate_url: string;
-    duplicate: boolean;
-    status: string;
-  };
-  error?: string;
-}
-
-async function submitSurvey(data: SurveyData): Promise<ApiResponse> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002';
-
-  try {
-    const response = await fetch(`${apiUrl}/api/generate/single`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-    return result;
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-}
-
 function SurveyContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [apiResponse, setApiResponse] = useState<ApiResponse | null>(null);
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const [userIp, setUserIp] = useState('');
 
   const [formData, setFormData] = useState<SurveyData>({
@@ -132,7 +99,7 @@ function SurveyContent() {
     }
   };
 
-  const handleContactSubmit = async (e: React.FormEvent) => {
+  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!formData.firstName || !formData.lastName || !formData.phone || !formData.email || !formData.zipCode) {
@@ -147,20 +114,52 @@ function SurveyContent() {
 
     setIsSubmitting(true);
 
-    const tcpaTimestamp = new Date().toISOString();
-    const submissionData = {
-      ...formData,
-      tcpaConsentTimestamp: tcpaTimestamp,
-    };
+    try {
+      const tcpaTimestamp = new Date().toISOString();
 
-    const result = await submitSurvey(submissionData);
-    setApiResponse(result);
-    setIsSubmitting(false);
+      // Create FormData for Web3Forms
+      const web3FormData = new FormData();
+      web3FormData.append('access_key', '34ad3eea-dd7b-47dc-b443-5c3259abd513');
+      web3FormData.append('subject', 'New Tax Relief Lead from Cacophiney Survey');
+      web3FormData.append('from_name', 'Cacophiney Tax Relief');
 
-    if (result.success) {
-      setCurrentStep(7);
-    } else {
-      alert(`Submission failed: ${result.error || 'Unknown error'}`);
+      // Lead information
+      web3FormData.append('firstName', formData.firstName);
+      web3FormData.append('lastName', formData.lastName);
+      web3FormData.append('email', formData.email);
+      web3FormData.append('phone', formData.phone);
+      web3FormData.append('zipCode', formData.zipCode);
+
+      // Survey responses
+      web3FormData.append('debtAmount', formData.debtAmount);
+      web3FormData.append('debtType', formData.debtType);
+      web3FormData.append('unfiled', formData.unfiled);
+      web3FormData.append('enforcement', formData.enforcement);
+      web3FormData.append('income', formData.income);
+
+      // Consent tracking
+      web3FormData.append('tcpaConsent', formData.tcpaConsent ? 'Yes' : 'No');
+      web3FormData.append('tcpaConsentTimestamp', tcpaTimestamp);
+      web3FormData.append('ipAddress', formData.ipAddress);
+
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: web3FormData
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmissionSuccess(true);
+        setCurrentStep(7);
+      } else {
+        alert('Submission failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -378,25 +377,21 @@ function SurveyContent() {
         .result-card p {
           font-size: 16px;
           margin-bottom: 24px;
+          line-height: 1.6;
         }
 
-        .result-links {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
+        .back-link {
+          display: inline-block;
           margin-top: 24px;
-        }
-
-        .result-links a {
           color: var(--copper);
           text-decoration: none;
           font-weight: 600;
-          padding: 8px;
+          padding: 8px 16px;
           border-radius: 4px;
           transition: background 0.2s;
         }
 
-        .result-links a:hover {
+        .back-link:hover {
           background: rgba(192, 98, 47, 0.1);
         }
 
@@ -594,34 +589,24 @@ function SurveyContent() {
               </div>
 
               <button type="submit" className="submit-btn" disabled={isSubmitting}>
-                {isSubmitting ? 'Processing...' : 'Submit & Get Results'}
+                {isSubmitting ? 'Submitting...' : 'Submit & Get Results'}
               </button>
             </form>
           </div>
         )}
 
-        {currentStep === 7 && apiResponse && (
+        {currentStep === 7 && submissionSuccess && (
           <div className="result-card">
-            <h2>Thank You for Submitting!</h2>
-            <p>Your tax relief eligibility has been processed. A specialist will review your case and contact you shortly.</p>
-
-            {apiResponse.video && (
-              <div className="result-links">
-                <p><strong>Your personalized video:</strong></p>
-                <a href={apiResponse.video.url} target="_blank" rel="noopener noreferrer">
-                  View Video
-                </a>
-              </div>
-            )}
-
-            {apiResponse.certificate && (
-              <div className="result-links">
-                <p><strong>Certificate ID:</strong> {apiResponse.certificate.cert_uuid}</p>
-                <a href={apiResponse.certificate.certificate_url} target="_blank" rel="noopener noreferrer">
-                  View Certificate
-                </a>
-              </div>
-            )}
+            <h2>Thank You for Your Submission!</h2>
+            <p>
+              Your information has been received. A tax relief specialist will review your case and contact you shortly to discuss your options.
+            </p>
+            <p>
+              We appreciate your interest in our tax relief services and look forward to helping you resolve your tax debt.
+            </p>
+            <Link href="/" className="back-link">
+              Return to Home Page
+            </Link>
           </div>
         )}
       </div>

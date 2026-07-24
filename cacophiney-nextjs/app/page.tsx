@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { submitTaxReliefForm } from '@/lib/api';
 
 export default function Home() {
   const [selectedDebt, setSelectedDebt] = useState('');
@@ -104,25 +103,28 @@ export default function Home() {
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const submissionData = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      zipCode: '', // Not collected on homepage contact form
-      debtAmount: customSelectValue,
-      debtType: '',
-      unfiled: '',
-      enforcement: '',
-      income: '',
-      tcpaConsent: tcpaConsent,
-      tcpaConsentTimestamp: tcpaTimestamp,
-      ipAddress: ipAddress,
-      certUuid: certUuid
-    };
-
     try {
-      const result = await submitTaxReliefForm(submissionData);
+      const web3FormData = new FormData();
+      web3FormData.append('access_key', '34ad3eea-dd7b-47dc-b443-5c3259abd513');
+      web3FormData.append('subject', 'New Contact Request from Cacophiney Homepage');
+      web3FormData.append('from_name', 'Cacophiney Tax Relief');
+
+      web3FormData.append('firstName', formData.firstName);
+      web3FormData.append('lastName', formData.lastName);
+      web3FormData.append('email', formData.email);
+      web3FormData.append('phone', formData.phone);
+      web3FormData.append('debtAmount', customSelectValue);
+      web3FormData.append('tcpaConsent', String(tcpaConsent));
+      web3FormData.append('tcpaConsentTimestamp', tcpaTimestamp);
+      web3FormData.append('ipAddress', ipAddress);
+      web3FormData.append('certUuid', certUuid);
+
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: web3FormData
+      });
+
+      const result = await response.json();
 
       if (result.success) {
         setShowContactSuccess(true);

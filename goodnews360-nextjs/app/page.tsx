@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import './globals.css';
-import { submitSurvey as submitToBackend, type SurveySubmission, type ApiResponse } from '@/lib/api';
 
 export default function HomePage() {
   const [showSurvey, setShowSurvey] = useState(false);
@@ -21,7 +20,7 @@ export default function HomePage() {
     zip: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [apiResponse, setApiResponse] = useState<ApiResponse | null>(null);
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
 
   const TOTAL_QUESTIONS = 6;
 
@@ -100,31 +99,44 @@ export default function HomePage() {
     setIsSubmitting(true);
 
     try {
-      const submission: SurveySubmission = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        zipCode: formData.zip,
-        age: answers.age || '',
-        homeOwnership: answers.home || '',
-        householdIncome: answers.income || '',
-        taxDebt: answers.tax || '',
-        billReduction: answers.bills || '',
-        tcpaConsent: tcpaConsent,
-        tcpaConsentTimestamp: consentTimestamp,
-        ipAddress: ipAddress,
-        certUuid: certUuid,
-      };
+      // Create FormData for Web3Forms
+      const web3FormData = new FormData();
+      web3FormData.append('access_key', '6f5e1f15-ea6c-46a1-b929-baaddcc0bab6');
+      web3FormData.append('subject', 'New Lead from Savings Check America Survey');
+      web3FormData.append('from_name', 'Savings Check America');
 
-      const result = await submitToBackend(submission);
-      setApiResponse(result);
+      // Contact information
+      web3FormData.append('firstName', formData.firstName);
+      web3FormData.append('lastName', formData.lastName);
+      web3FormData.append('email', formData.email);
+      web3FormData.append('phone', formData.phone);
+      web3FormData.append('zipCode', formData.zip);
+
+      // Survey responses
+      web3FormData.append('age', answers.age || '');
+      web3FormData.append('homeOwnership', answers.home || '');
+      web3FormData.append('householdIncome', answers.income || '');
+      web3FormData.append('taxDebt', answers.tax || '');
+      web3FormData.append('billReduction', answers.bills || '');
+
+      // Consent tracking
+      web3FormData.append('tcpaConsent', tcpaConsent ? 'Yes' : 'No');
+      web3FormData.append('tcpaConsentTimestamp', consentTimestamp);
+      web3FormData.append('ipAddress', ipAddress);
+      web3FormData.append('certUuid', certUuid);
+
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: web3FormData
+      });
+
+      const result = await response.json();
 
       if (result.success) {
+        setSubmissionSuccess(true);
         setCurrentStep(7);
       } else {
-        // Stay on current step and show error
-        alert(result.error || 'An error occurred. Please try again.');
+        alert('Submission failed. Please try again.');
       }
     } catch (error) {
       console.error('Submission error:', error);
@@ -527,86 +539,13 @@ export default function HomePage() {
               <div className="badge">✓</div>
               <h2>Survey complete</h2>
 
-              {isSubmitting ? (
-                <p style={{ marginTop: '20px' }}>
-                  <strong>Generating your personalized video...</strong><br />
-                  This may take up to 60 seconds. Please do not close this page.
-                </p>
-              ) : apiResponse && apiResponse.success ? (
+              {submissionSuccess ? (
                 <>
-                  <p>
-                    Thank you! Your survey has been processed successfully.
+                  <p style={{ marginTop: '20px' }}>
+                    Thank you! Your answers have been recorded and matched against programs currently accepting applicants.
                   </p>
-
-                  {apiResponse.video && apiResponse.video.success && (
-                    <div style={{ marginTop: '20px', textAlign: 'left', background: '#f0f6f3', padding: '20px', borderRadius: '8px', border: '1px solid var(--line)' }}>
-                      <h3 style={{ marginBottom: '10px', fontSize: '16px' }}>📹 Your Personalized Video</h3>
-                      <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '12px' }}>
-                        Recording ID: {apiResponse.video.recording_id}
-                      </p>
-                      {apiResponse.video.video_url && (
-                        <a
-                          href={apiResponse.video.video_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            display: 'inline-block',
-                            background: 'var(--green)',
-                            color: '#fff',
-                            padding: '10px 20px',
-                            borderRadius: '6px',
-                            textDecoration: 'none',
-                            fontWeight: '600',
-                            fontSize: '14px'
-                          }}
-                        >
-                          View Your Video →
-                        </a>
-                      )}
-                    </div>
-                  )}
-
-                  {apiResponse.certificate && apiResponse.certificate.success && apiResponse.certificate.certificate_url && (
-                    <div style={{ marginTop: '16px', textAlign: 'left', background: '#fff8ed', padding: '20px', borderRadius: '8px', border: '1px solid var(--gold)' }}>
-                      <h3 style={{ marginBottom: '10px', fontSize: '16px' }}>🏆 Your Certificate</h3>
-                      <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '12px' }}>
-                        Certificate ID: {apiResponse.certificate.cert_uuid}
-                      </p>
-                      <a
-                        href={apiResponse.certificate.certificate_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          display: 'inline-block',
-                          background: 'var(--gold)',
-                          color: '#fff',
-                          padding: '10px 20px',
-                          borderRadius: '6px',
-                          textDecoration: 'none',
-                          fontWeight: '600',
-                          fontSize: '14px'
-                        }}
-                      >
-                        View Certificate →
-                      </a>
-                      {apiResponse.certificate.duplicate && (
-                        <p style={{ marginTop: '10px', fontSize: '12px', color: 'var(--muted)' }}>
-                          Note: This is a duplicate certificate (previous submission found)
-                        </p>
-                      )}
-                    </div>
-                  )}
-
-                  {apiResponse.certificate && !apiResponse.certificate.success && apiResponse.certificate.warning && (
-                    <div style={{ marginTop: '16px', padding: '16px', background: '#fff4e6', borderRadius: '8px', border: '1px solid #ffb020' }}>
-                      <p style={{ fontSize: '13px', color: '#8b5a00' }}>
-                        ⚠️ {apiResponse.certificate.warning}
-                      </p>
-                    </div>
-                  )}
-
-                  <p style={{ marginTop: '20px', fontSize: '14px', color: 'var(--muted)' }}>
-                    A specialist will reach out with your results shortly.
+                  <p style={{ marginTop: '16px', fontSize: '14px', color: 'var(--muted)' }}>
+                    A specialist will reach out with your results shortly. We appreciate your time and look forward to helping you identify potential savings opportunities.
                   </p>
                 </>
               ) : (
